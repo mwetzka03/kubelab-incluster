@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: kubelab-appset
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - cluster: https://kubernetes.default.svc
+            environment: dev
+          - cluster: https://kubernetes.default.svc
+            environment: staging
+          - cluster: https://kubernetes.default.svc
+            environment: production
+  template:
+    metadata:
+      name: kubelab-app-{{environment}}
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/mwetzka03/kubelab-incluster
+        targetRevision: HEAD
+        path: apps/kubelab-app
+      destination:
+        server: "{{cluster}}"
+        namespace: default
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
