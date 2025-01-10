@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubelab-application
+  namespace: argocd
+spec:
+  destination:
+    namespace: default
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: apps/kubelab-app
+    repoURL: https://github.com/mwetzka03/kubelab-incluster.git
+    targetRevision: HEAD
+  syncPolicy:
+    automated: {}        
